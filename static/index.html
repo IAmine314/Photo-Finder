@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Found — Event Photo Finder</title>
+    <!-- Fraunces (display, editorial warmth) / Inter (UI) / IBM Plex Mono (frame data, technical readouts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css?v=4" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Sprocket rail runs the full height of the app -->
+      <div class="sprocket-rail" aria-hidden="true"></div>
+
+      <!-- Top Bar -->
+      <nav class="top-bar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">◐</span>
+          <div class="brand-text">
+            <span class="brand-title"
+              >Find Your Picture<span class="brand-dot">.</span></span
+            >
+          </div>
+        </div>
+        <div class="sys-status">
+          <span class="pulse-dot"></span>
+          <span class="status-text">READY TO FIND MATCHES</span>
+        </div>
+      </nav>
+
+      <!-- Main Workspace -->
+      <main class="workspace">
+        <!-- Loading Bench (Steps 1 & 2) -->
+        <aside class="sidebar">
+          <!-- Frame 01: Drive Source -->
+          <div class="panel-box">
+            <div class="panel-header">
+              <span class="frame-tag">FRAME 01</span>
+              <h3>Load the roll</h3>
+            </div>
+            <p class="panel-copy">
+              Point at a Google Drive folder and every photo in it gets indexed
+              for faces.
+            </p>
+            <div class="input-wrapper">
+              <input
+                type="text"
+                id="driveLinkInput"
+                placeholder="Paste Drive folder URL or ID…"
+                autocomplete="off"
+              />
+              <button
+                id="indexBtn"
+                class="btn-action"
+                onclick="startIndexing()"
+              >
+                <span>Index this folder</span>
+              </button>
+            </div>
+            <div id="indexStatus" class="status-callout"></div>
+          </div>
+
+          <div class="bench-divider" aria-hidden="true"></div>
+
+          <!-- Frame 02: Reference Face -->
+          <div class="panel-box">
+            <div class="panel-header">
+              <span class="frame-tag">FRAME 02</span>
+              <h3>Your reference image</h3>
+            </div>
+            <p class="panel-copy">
+              Upload a clear photo of your face, or capture one live. This is
+              what we'll search for.
+            </p>
+
+            <div class="tab-segment">
+              <button
+                class="segment-btn active"
+                id="btnUploadTab"
+                onclick="switchTab('uploadTab')"
+              >
+                Upload
+              </button>
+              <button
+                class="segment-btn"
+                id="btnWebcamTab"
+                onclick="switchTab('webcamTab')"
+              >
+                Webcam
+              </button>
+            </div>
+
+            <!-- Tab A: Dropzone Upload -->
+            <div id="uploadTab" class="tab-pane active">
+              <div
+                class="drop-container"
+                id="dropZone"
+                onclick="document.getElementById('selfieFileInput').click()"
+              >
+                <div class="drop-icon-box">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                  >
+                    <path d="M12 16V4M12 4L7 9M12 4L17 9M4 20H20"></path>
+                  </svg>
+                </div>
+                <p class="drop-primary">Drop your photo here</p>
+                <span class="drop-sub">or click to browse</span>
+                <input
+                  type="file"
+                  id="selfieFileInput"
+                  accept="image/*"
+                  style="display: none"
+                  onchange="handleFileSelect(event)"
+                />
+              </div>
+            </div>
+
+            <!-- Tab B: Webcam Viewfinder -->
+            <div id="webcamTab" class="tab-pane">
+              <div class="viewfinder-frame">
+                <div class="viewfinder-hud">
+                  <span class="hud-tag">● LIVE</span>
+                  <span class="hud-crosshair">+</span>
+                </div>
+                <div class="webcam-viewport">
+                  <video id="webcam" autoplay playsinline></video>
+                  <canvas id="webcamCanvas" style="display: none"></canvas>
+                </div>
+                <button
+                  id="captureBtn"
+                  class="btn-secondary full-width"
+                  onclick="captureWebcam()"
+                >
+                  Capture frame
+                </button>
+              </div>
+            </div>
+
+            <!-- Query Preview -->
+            <div
+              id="previewContainer"
+              class="preview-card"
+              style="display: none"
+            >
+              <div class="preview-thumb-box">
+                <img id="selfiePreview" src="" alt="Query Target" />
+              </div>
+              <div class="preview-details">
+                <span class="preview-label">Reference loaded</span>
+                <button class="btn-clear" onclick="clearPreview()">
+                  Clear
+                </button>
+              </div>
+            </div>
+
+            <button
+              id="searchBtn"
+              class="btn-accent full-width shutter-btn"
+              onclick="performSearch()"
+              disabled
+            >
+              <span class="shutter-ring"></span>
+              <span>Find matches</span>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Contact Sheet (Step 3) -->
+        <section class="gallery-canvas">
+          <div class="gallery-header">
+            <div>
+              <span class="frame-tag">FRAME 03</span>
+              <h2>Contact sheet</h2>
+            </div>
+            <div
+              id="resultsCountBadge"
+              class="count-badge"
+              style="display: none"
+            >
+              0 MATCHES
+            </div>
+          </div>
+
+          <div id="resultsStatus" class="status-banner info active">
+            Load a folder and a reference frame to begin developing matches.
+          </div>
+
+          <div id="resultsGrid" class="contact-grid"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Lightbox / Loupe View -->
+    <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox(event)">
+      <div class="lightbox-dialog">
+        <button class="lightbox-close" onclick="closeLightbox(event)">
+          &times;
+        </button>
+        <img class="lightbox-image" id="lightboxImg" />
+      </div>
+    </div>
+
+    <script src="/static/js/app.js?v=4"></script>
+  </body>
+</html>
