@@ -1,14 +1,15 @@
+
 # 📸 Event Photo Finder
 
 An AI-powered event photo search platform. Users can submit a selfie or capture an image via webcam to instantly find all photos containing their face across large, multi-folder Google Drive event albums.
 
-Powered by **FastAPI**, **InsightFace (`buffalo_l` / ArcFace)**, **SQLite**, and **Asyncio**.
+Powered by **FastAPI**, **InsightFace (\`buffalo_l\` / ArcFace)**, **SQLite**, and **Asyncio**.
 
 ---
 
 ## 🌟 Key Features
 
-* **Facial Recognition Engine**: Uses InsightFace (`buffalo_l`) to extract 512-dimensional feature vectors and perform cosine similarity searches across crowded event albums.
+* **Facial Recognition Engine**: Uses InsightFace (\`buffalo_l\`) to extract 512-dimensional feature vectors and perform cosine similarity searches across crowded event albums.
 * **Recursive Google Drive Traversal**: Automatically scans parent folders and all nested subfolders using Breadth-First Search (BFS) to index photos stored at any depth.
 * **Async In-Memory Pipeline**: Downloads and decodes image streams in parallel directly into OpenCV memory frames to maximize indexing throughput.
 * **Webcam & File Upload UI**: Clean browser interface for real-time selfie capture and instant result previews.
@@ -17,6 +18,42 @@ Powered by **FastAPI**, **InsightFace (`buffalo_l` / ArcFace)**, **SQLite**, and
 
 ---
 
+## 📂 Project Structure
+
+\`\`\`text
+event-photo-finder/
+├── static/
+│   ├── index.html        # Web interface layout
+│   ├── css/styles.css    # Styling & responsive layout
+│   └── js/app.js         # Frontend webcam & API orchestration
+├── data/                 # SQLite vector storage (auto-created)
+├── config.py             # Settings, threshold tuning, and environment variables
+├── database.py           # SQLAlchemy ORM models & session management
+├── drive_service.py      # Google Drive API recursive traversal & image streaming
+├── ml_pipeline.py        # InsightFace embedding extraction routines
+├── main.py               # FastAPI endpoints & background tasks
+├── Dockerfile            # Container build specification
+├── requirements.txt      # Python dependencies
+└── README.md
+\`\`\`
+
+---
+
+## 🛠️ Prerequisites & API Setup
+
+### 🔑 How to Get a Google Drive API Key
+
+To fetch photo metadata from shared Google Drive folders, you need a Google Drive API key:
+
+1. Visit the [Google Cloud Console](https://console.cloud.google.com/).
+2. Click **Select a project** at the top bar and create a **New Project**.
+3. Open the left sidebar menu and navigate to **APIs & Services > Library**.
+4. Search for **Google Drive API**, click it, and press **Enable**.
+5. Go to **APIs & Services > Credentials**.
+6. Click **+ Create Credentials** at the top and choose **API key**.
+7. Copy your API Key to use during startup.
+
+---
 
 ## 🚀 How to Launch
 
@@ -37,7 +74,7 @@ Docker packages Python, OpenCV, C++ build tools, and all machine learning librar
 
 3. **Run the application:**
    \`\`\`bash
-   docker run -d -p 8000:8000 -e GOOGLE_API_KEY="your_google_drive_api_key_here" photo-finder
+   docker run -d -p 8000:8000 -e GOOGLE_API_KEY="YOUR_GOOGLE_DRIVE_API_KEY" photo-finder
    \`\`\`
 
 4. **Access the web app:**
@@ -62,7 +99,7 @@ If you want to modify or run the Python code directly:
 3. **Set up environment variables:**
    Create a \`.env\` file in the project root:
    \`\`\`env
-   GOOGLE_API_KEY=your_google_drive_api_key_here
+   GOOGLE_API_KEY=YOUR_GOOGLE_DRIVE_API_KEY
    \`\`\`
 
 4. **Create a virtual environment & install dependencies:**
@@ -106,3 +143,7 @@ If you want to modify or run the Python code directly:
 | \`POST\` | \`/api/search-face\` | Accepts base64 selfie data and returns matching photo URLs |
 
 ---
+
+## 📜 License
+Distributed under the MIT License.
+"@
