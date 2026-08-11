@@ -17,26 +17,6 @@ Powered by **FastAPI**, **InsightFace (`buffalo_l` / ArcFace)**, **SQLite**, and
 
 ---
 
-## 📂 Project Structure
-
-\`\`\`text
-event-photo-finder/
-├── static/
-│   ├── index.html        # Web interface layout
-│   ├── css/styles.css    # Styling & responsive layout
-│   └── js/app.js         # Frontend webcam & API orchestration
-├── data/                 # SQLite vector storage (auto-created)
-├── config.py             # Settings, threshold tuning, and environment variables
-├── database.py           # SQLAlchemy ORM models & session management
-├── drive_service.py      # Google Drive API recursive traversal & image streaming
-├── ml_pipeline.py        # InsightFace embedding extraction routines
-├── main.py               # FastAPI endpoints & background tasks
-├── Dockerfile            # Container build specification
-├── requirements.txt      # Python dependencies
-└── README.md
-\`\`\`
-
----
 
 ## 🚀 How to Launch
 
