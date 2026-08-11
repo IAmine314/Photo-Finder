@@ -123,7 +123,3 @@ If you want to modify or run the Python code directly:
 | \`POST\` | \`/api/search-face\` | Accepts base64 selfie data and returns matching photo URLs |
 
 ---
-
-## 📜 License
-Distributed under the MIT License.
-"@
